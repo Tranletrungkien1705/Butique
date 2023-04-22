@@ -1,0 +1,71 @@
+﻿@model List<Butique.Models.Entity.Product>
+@{
+    ViewData["Title"] = "Product Listing ";
+}
+<form method="get">
+    <div class="row form-group">
+        <div class="col-md-8 ">
+            <input type="text" class="form-control" name="q" value='@ViewBag.keyword' placeholder="Enter Product Name or Code" />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" class="bnt btn-success" value="search" />
+        </div>
+    </div>
+</form>
+<h2><a href="~/Product/Add/">Add New Category</a></h2>
+<table class="table table-hover">
+    <tr>
+        <th>Id</th>
+        <th>Category Name</th>
+        <th><a asp-action="Index" asp-route-sortOrder="@ViewBag.SortByName">Name</a> </th>
+        <th><a asp-action="Index" asp-route-sortOrder="@ViewBag.SortByCode">Code</a></th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Date Time Entered</th>
+        <th>Description</th>
+        <th colspan="2" class="text-center">Action</th>
+    </tr>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.Id</td>
+            <td>@p.CategoryEntity.Name</td>
+            <td>@p.Name</td>
+            <td>@p.Code</td>
+            <td>@p.Quantity</td>
+            <td>@p.UnitPrice</td>
+            <td>@p.CreatedDate</td>
+            <td>@p.Description</td>
+            <td><a asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id">Edit</a></td>
+            <td><a href="javascript:void(0)" onclick="Delete('@p.Id')">Delete</a></td>
+        </tr>
+    }
+</table>
+@*Modal*@
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h1>Delete confirmation</h1></div>
+            <div class="modal-body">Are you sure delete the record?</div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" id="closeModal">Close</button>
+                <button class="btn btn-danger" id="confirmDeleted">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Delete = (catId) => {
+        //if(confirm("Are you sure delete the record?")){
+        //    window.location.href="/Category/Delete/?id="+catId;
+        //}
+        $("#deleteModal").modal('show');
+        $("#closeModal").click(function () {
+            $("#deleteModal").modal('hide');
+        });
+        $("#confirmDeleted").click(function () {
+            window.location.href = "/Product/Delete/?id=" + catId;
+        })
+    }
+</script>

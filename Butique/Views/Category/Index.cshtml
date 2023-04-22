@@ -1,0 +1,65 @@
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@model IPagedList<Butique.Models.Entity.Category>
+@{
+    ViewData["Title"] = "Category Listing";
+}
+<form method="get">
+    <div class="row form-group">
+        <div class="col-md-8 ">
+            <input type="text" class="form-control" name="q" value='@ViewData["keyword"]' placeholder="Enter Category Name or Code" />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" class="bnt btn-success" value="search" />
+        </div>
+    </div>
+</form>
+<div class="row">
+    <h2><a href="~/Category/Add/">Add New Category</a></h2>
+    <table class="table table-hover">
+        <tr >
+            <th>Id</th>
+            <th>Name</th>
+            <th colspan="2" class="text-center"></th>
+        </tr>
+        @foreach(var category in Model)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td><a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id">Edit</a></td>
+                <td><a href="javascript:void(0)" onclick="Delete('@category.Id')">Delete</a></td>
+            </tr>
+        }
+    </table>
+    @Html.PagedListPager(Model,page=>Url.Action("Index",new{page}))
+</div>
+@*Modal*@
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h1>Delete confirmation</h1></div>
+            <div class="modal-body">Are you sure delete the record?</div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" id="closeModal">Close</button>
+                <button class="btn btn-danger" id="confirmDeleted">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Delete=(catId)=>{
+        //if(confirm("Are you sure delete the record?")){
+        //    window.location.href="/Category/Delete/?id="+catId;
+        //}
+        $("#deleteModal").modal('show');
+        $("#closeModal").click(function(){
+            $("#deleteModal").modal('hide');
+        });
+        $("#confirmDeleted").click(function(){
+            window.location.href="/Category/Delete/?id=" + catId;
+        })
+    }
+</script>
